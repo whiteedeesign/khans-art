@@ -1,8 +1,30 @@
-
 import React from 'react';
-import { SERVICES, COLORS } from '../constants';
+import { useServices } from '../hooks/useServices';
+import { COLORS } from '../constants';
 
 const Services: React.FC = () => {
+  const { services, loading, error } = useServices();
+
+  if (loading) {
+    return (
+      <section id="services" className="py-24 bg-white rounded-[4rem] mx-4 md:mx-10 my-12">
+        <div className="container mx-auto px-6">
+          <p className="text-center text-[#8B6F5C]">Загрузка услуг...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="services" className="py-24 bg-white rounded-[4rem] mx-4 md:mx-10 my-12">
+        <div className="container mx-auto px-6">
+          <p className="text-center text-red-500">Ошибка: {error}</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="services" className="py-24 bg-white rounded-[4rem] mx-4 md:mx-10 my-12">
       <div className="container mx-auto px-6">
@@ -17,9 +39,9 @@ const Services: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {SERVICES.map((service, index) => (
-            <div 
-              key={service.id} 
+          {services.map((service, index) => (
+            <div
+              key={service.id}
               className={`p-8 rounded-3xl border border-[#E8C4B8] flex items-center justify-between group cursor-pointer transition-all hover:bg-[#F5F0E8] ${
                 index % 2 === 1 ? 'md:translate-y-6' : ''
               }`}
@@ -28,10 +50,10 @@ const Services: React.FC = () => {
                 <h3 className="text-xl font-bold text-[#4A3728] group-hover:text-[#8B6F5C] transition-colors">
                   {service.name}
                 </h3>
-                <p className="text-sm text-[#4A3728]/60">Длительность: 1.5 - 2.5 ч.</p>
+                <p className="text-sm text-[#4A3728]/60">Длительность: {service.duration_minutes} мин.</p>
               </div>
               <div className="text-right">
-                <span className="text-2xl font-rounded font-bold text-[#8B6F5C]">{service.price}</span>
+                <span className="text-2xl font-rounded font-bold text-[#8B6F5C]">от {service.price}₽</span>
               </div>
             </div>
           ))}
